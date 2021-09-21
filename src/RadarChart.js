@@ -1,4 +1,5 @@
 import { html, css, LitElement } from 'lit';
+import { Chart } from '../Chart';
 
 export class RadarChart extends LitElement {
   static get styles() {
@@ -13,25 +14,34 @@ export class RadarChart extends LitElement {
 
   static get properties() {
     return {
-      title: { type: String },
-      counter: { type: Number },
+      height: { type: Number },
     };
   }
 
   constructor() {
     super();
-    this.title = 'Hey there';
-    this.counter = 5;
+    this.height = 150;
+    this.chartOptionsName = 'default';
+    this.chartOptionsArr = { 
+      default: {
+        
+      }
+    };
   }
 
-  __increment() {
-    this.counter += 1;
+  firstUpdated() {
+    this.marksCanvas = this.shadowRoot.querySelector('#marksChart');
+    this.chartOptions = this.chartOptionsArr[this.chartOptionsName]
+    this.radarChart2 = new Chart(this.marksCanvas, {
+      type: 'radar',
+      data: this.marksData,
+      options: this.chartOptions
+    });
   }
 
   render() {
     return html`
-      <h2>${this.title} Nr. ${this.counter}!</h2>
-      <button @click=${this.__increment}>increment</button>
+      <canvas id="marksChart" width="600" height="${this.height}"></canvas>
     `;
   }
 }
