@@ -2,8 +2,8 @@
   "name": "radar-chart",
   "description": "Webcomponent radar-chart following open-wc recommendations",
   "license": "MIT",
-  "author": "radar-chart",
-  "version": "0.0.0",
+  "author": "manufosela",
+  "version": "1.0.0",
   "main": "index.js",
   "module": "index.js",
   "scripts": {
