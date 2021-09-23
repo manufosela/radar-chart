@@ -1,5 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import Chart from 'chart.js/auto'
+import Chart from 'chart.js/auto';
 
 export class RadarChart extends LitElement {
   static get styles() {
@@ -17,8 +17,12 @@ export class RadarChart extends LitElement {
       sideSize: { type: Number, reflect: true, attribute: 'side-size' },
       labels: { type: Array },
       marksData: { type: Array },
-      chartOptionsName: { type: String, reflect: true, attribute: 'chart-options-name' },
-      chartOptionsArr: { type: Object, reflect: true }
+      chartOptionsName: {
+        type: String,
+        reflect: true,
+        attribute: 'chart-options-name',
+      },
+      chartOptionsArr: { type: Object, reflect: true },
     };
   }
 
@@ -26,7 +30,7 @@ export class RadarChart extends LitElement {
     super();
     this.sideSize = 500;
     this.chartOptionsName = 'default';
-    this.chartOptionsArr = { 
+    this.chartOptionsArr = {
       default: {},
       dots: {
         scale: {
@@ -34,13 +38,13 @@ export class RadarChart extends LitElement {
             beginAtZero: true,
             min: 0,
             max: 100,
-            stepSize: 10
+            stepSize: 10,
           },
           pointLabels: {
-            fontSize: 10
-          }
-        }
-      }
+            fontSize: 10,
+          },
+        },
+      },
     };
     this.marksData = {};
     this.labelsName = [];
@@ -67,7 +71,7 @@ export class RadarChart extends LitElement {
   _setLabels() {
     const domLabels = [...this.querySelectorAll('.radar-chart__labels li')];
     this.labels = [];
-    domLabels.forEach((label) => {
+    domLabels.forEach(label => {
       const labelText = label.innerText;
       this.labels.push(labelText);
     });
@@ -77,15 +81,17 @@ export class RadarChart extends LitElement {
   _setDataset() {
     this.marksData.datasets = [];
     const domMarks = [...this.querySelectorAll('.radar-chart__marks li')];
-    domMarks.forEach((mark) => {
+    domMarks.forEach(mark => {
       const randomRed = Math.floor(Math.random() * 255);
       const randomGreen = Math.floor(Math.random() * 255);
       const randomBlue = Math.floor(Math.random() * 255);
-      const markData = {}
+      const markData = {};
       markData.data = mark.innerText.split(',').map(Number);
       markData.label = mark.getAttribute('name');
       this.labelsName.push(mark.getAttribute('name'));
-      markData.backgroundColor = `rgba(${randomRed},${randomGreen},${randomBlue},0.2)`;
+      markData.backgroundColor =
+        mark.dataset.bgcolor ||
+        `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, 0.2)`;
       if (this.chartOptionsName === 'dots') {
         markData.fill = false;
         markData.radius = 10;
@@ -108,7 +114,7 @@ export class RadarChart extends LitElement {
     this.radarChart = new Chart(this.marksCanvas, {
       type: 'radar',
       data: this.marksData,
-      options: this.chartOptions
+      options: this.chartOptions,
     });
   }
 
