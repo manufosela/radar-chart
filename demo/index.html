@@ -6,6 +6,9 @@
       body {
         background: #fafafa;
       }
+      #demo {
+        display: flex;
+      }
     </style>
   </head>
   <body>
@@ -17,7 +20,7 @@
 
       render(
         html`
-          <radar-chart side-size="500">
+          <radar-chart id="radarchart1" side-size="500">
             <ul class="radar-chart__labels">
               <li>English</li>
               <li>Maths</li>
@@ -34,6 +37,27 @@
               <li name="Estudiante 3">60, 80, 70, 70, 80, 90</li>
               <li name="Estudiante 4">70, 70, 80, 80, 90, 80</li>
               <li name="Estudiante 4">80, 80, 70, 60, 70, 80</li>
+            </ul>
+          </radar-chart>
+
+          <radar-chart
+            id="radarchart2"
+            side-size="500"
+            chart-options-name="dots"
+          >
+            <ul class="radar-chart__labels">
+              <li>English</li>
+              <li>Maths</li>
+              <li>Physics</li>
+              <li>Chemistry</li>
+              <li>Biology</li>
+              <li>History</li>
+            </ul>
+            <ul class="radar-chart__marks">
+              <li name="Estudiante 1">80, 80, 90, 70, 80, 90</li>
+              <li name="Estudiante 2">90, 70, 80, 80, 90, 80</li>
+              <li name="Estudiante 3">60, 80, 70, 70, 80, 90</li>
+              <li name="Estudiante 4">70, 70, 80, 80, 90, 80</li>
             </ul>
           </radar-chart>
         `,
