@@ -3,7 +3,7 @@
   "description": "Webcomponent radar-chart following open-wc recommendations",
   "license": "MIT",
   "author": "manufosela",
-  "version": "1.1.0",
+  "version": "1.0.2",
   "main": "radar-chart.js",
   "module": "radar-chart.js",
   "type": "module",
