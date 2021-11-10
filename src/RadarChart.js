@@ -1,15 +1,14 @@
-import { html, css, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import Chart from 'chart.js/auto'
+import { RadarChartStyles } from './radar-chart-styles.js';
 
 export class RadarChart extends LitElement {
+  static get is() {
+    return "radar-chart";
+  }
+
   static get styles() {
-    return css`
-      :host {
-        display: block;
-        padding: 25px;
-        color: var(--radar-chart-text-color, #000);
-      }
-    `;
+     return [RadarChartStyles];
   }
 
   static get properties() {
@@ -24,6 +23,7 @@ export class RadarChart extends LitElement {
 
   constructor() {
     super();
+    this.id = `radar-chart-${Math.random().toString(36).substring(2, 15)}`;
     this.sideSize = 500;
     this.chartOptionsName = 'default';
     this.chartOptionsArr = { 
@@ -53,6 +53,17 @@ export class RadarChart extends LitElement {
 
     this._setLabels();
     this._setDataset();
+  }
+
+  firstUpdated() {
+    const wcReadyEvent = new CustomEvent('wc-ready', {
+      detail: {
+        id: this.id,
+        wcTag: this.is,
+      }
+    });
+    this._drawChart();
+    document.dispatchEvent(wcReadyEvent);
   }
 
   setData(marksData, labelName = null) {
@@ -110,10 +121,6 @@ export class RadarChart extends LitElement {
       data: this.marksData,
       options: this.chartOptions
     });
-  }
-
-  firstUpdated() {
-    this._drawChart();
   }
 
   render() {
