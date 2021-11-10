@@ -3,9 +3,14 @@
   "description": "Webcomponent radar-chart following open-wc recommendations",
   "license": "MIT",
   "author": "manufosela",
-  "version": "1.0.0",
-  "main": "index.js",
-  "module": "index.js",
+  "version": "1.0.1",
+  "main": "radar-chart.js",
+  "module": "radar-chart.js",
+  "type": "module",
+  "keywords": [
+    "lit",
+    "webcomponents"
+  ],
   "scripts": {
     "analyze": "cem analyze --litelement",
     "start": "web-dev-server",
@@ -18,14 +23,14 @@
   },
   "dependencies": {
     "chart.js": "^3.5.1",
-    "lit": "^2.0.0-rc.4"
+    "lit": "^2.0.2"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.4.17",
     "@open-wc/eslint-config": "^4.3.0",
-    "@open-wc/testing": "next",
+    "@open-wc/testing": "^3.0.0-next.5",
     "@web/dev-server": "^0.1.22",
-    "@web/dev-server-storybook": "next",
+    "@web/dev-server-storybook": "^0.0.2",
     "@web/test-runner": "^0.13.17",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
