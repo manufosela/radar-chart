@@ -13,15 +13,19 @@ export class RadarChart extends LitElement {
 
   static get properties() {
     return {
+      id: { type: String, reflect: true },
       sideSize: { type: Number, reflect: true, attribute: 'side-size' },
       labels: { type: Array },
       marksData: { type: Array },
       chartOptionsName: {
         type: String,
-        reflect: true,
         attribute: 'chart-options-name',
       },
-      chartOptionsArr: { type: Object, reflect: true },
+      chartOptionsArr: { type: Object },
+      fontSize: { type: Number, reflect: true, attribute: 'font-size' },
+      scaleMin: { type: Number, reflect: true, attribute: 'scale-min' },
+      scaleMax: { type: Number, reflect: true, attribute: 'scale-max' },
+      scaleStep: { type: Number, reflect: true, attribute: 'scale-step' },
     };
   }
 
@@ -30,33 +34,54 @@ export class RadarChart extends LitElement {
     this.id = `radar-chart-${Math.random().toString(36).substring(2, 15)}`;
     this.sideSize = 500;
     this.chartOptionsName = 'default';
-    this.chartOptionsArr = {
-      default: {},
-      dots: {
-        scale: {
-          ticks: {
-            beginAtZero: true,
-            min: 0,
-            max: 100,
-            stepSize: 10,
-          },
-          pointLabels: {
-            fontSize: 10,
-          },
-        },
-      },
-    };
+    this.fontSize = 10;
+    this.scaleMin = 0;
+    this.scaleMax = 10;
+    this.scaleStep = 1;
+
+    this.chartOptionsArr = {};
     this.marksData = {};
     this.labelsName = [];
+
+    this.updateData = this.updateData.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.marksData = {};
-    this.labelsName = [];
 
+    this.chartOptionsArr = {
+      default: {
+        scale: {
+          display: true,
+          min: this.scaleMin,
+          max: this.scaleMax,
+          stepSize: this.scaleStep,
+          ticks: {
+            showLabelBackdrop: false,
+          },
+          pointLabels: {
+            fontSize: this.fontSize,
+          },
+          responsive: false,
+        }
+      },
+      dots: {
+        scale: {
+          ticks: {
+            beginAtZero: true,
+            min: this.scaleMin,
+            max: this.scaleMax,
+            stepSize: this.scaleStep,
+          },
+          pointLabels: {
+            fontSize: this.fontSize,
+          },
+        },
+      },
+    };
     this._setLabels();
     this._setDataset();
+    document.addEventListener('radar-chart-update-data', this.updateData);
   }
 
   firstUpdated() {
@@ -70,13 +95,28 @@ export class RadarChart extends LitElement {
     document.dispatchEvent(wcReadyEvent);
   }
 
+  updateData(e) {
+    const { id, labelName = null, labelField = [], value = [] } = e.detail;
+    if (id === this.id) {
+      let index = 0;
+      if (labelName !== null) {
+        index = this.labelsName.indexOf(labelName);
+      }
+      labelField.forEach((field, i) => {
+        const indexField = this.labels.indexOf(field);
+        this.marksData.datasets[index].data[indexField] = value[i];
+        this._drawChart();
+      });
+    }
+  }
+
   setData(marksData, labelName = null) {
     let index = 0;
     if (labelName !== null) {
       index = this.labelsName.indexOf(labelName);
     }
     this.marksData.datasets[index].data = marksData;
-    this._drawChart();
+    this._drawChart(index);
   }
 
   _setLabels() {
@@ -116,17 +156,19 @@ export class RadarChart extends LitElement {
     });
   }
 
-  _drawChart() {
+  _drawChart(index = 0) {
     this.marksCanvas = this.shadowRoot.querySelector('#marksChart');
     this.chartOptions = this.chartOptionsArr[this.chartOptionsName];
     if (this.radarChart) {
-      this.radarChart.destroy();
+      this.radarChart.data.datasets[0].data[index] = this.marksData.datasets[0].data[index];
+      this.radarChart.update();
+    } else {
+      this.radarChart = new Chart(this.marksCanvas, {
+        type: 'radar',
+        data: this.marksData,
+        options: this.chartOptions,
+      });
     }
-    this.radarChart = new Chart(this.marksCanvas, {
-      type: 'radar',
-      data: this.marksData,
-      options: this.chartOptions,
-    });
   }
 
   render() {
