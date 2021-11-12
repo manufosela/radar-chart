@@ -20,7 +20,13 @@
 
       render(
         html`
-          <radar-chart id="radarchart1" side-size="500">
+          <radar-chart
+            id="radarchart1"
+            side-size="500"
+            scale-min="0"
+            scale-max="100"
+            scale-step="10"
+          >
             <ul class="radar-chart__labels">
               <li>English</li>
               <li>Maths</li>
