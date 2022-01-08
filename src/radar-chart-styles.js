@@ -19,4 +19,38 @@ export const RadarChartStyles = css`
     padding: 25px;
     color: var(--radar-chart-text-color, #000);
   }
+  table {
+    margin: 2rem 0;
+  }
+  caption {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  tr:nth-child(even){
+    background-color: var(--radar-chart-table-odd-background-color, #f2f2f2);
+  }
+  tr:nth-child(odd){
+    background-color: var(--radar-chart-table-even-background-color, #fff);
+  }
+  th {
+    font-weight: bold;
+    background-color: var(--radar-chart-table-header-background-color, #fff);
+  }
+  td, th {
+    text-align:center;
+    margin:0 auto;
+  }
+  td[scope="row"] {
+    color: var(--radar-chart-table-label-color, #00F);
+    background-color: var(--radar-chart-table-label-background-color, #FFF);
+    font-weight: var(--radar-chart-table-label-font-weight, bold);
+  }
+  .radar-chart__labels {
+    color: var(--radar-chart-labels-color, #000);
+    background-color: var(--radar-chart-labels-background-color, #fff);
+  }
+  .radar-chart__marks {
+    color: var(--radar-chart-marks-color, #000);
+    background-color: var(--radar-chart-marks-background-color, #fff);
+  }
 `;

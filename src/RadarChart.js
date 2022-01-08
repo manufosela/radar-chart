@@ -26,6 +26,7 @@ export class RadarChart extends LitElement {
       scaleMin: { type: Number, reflect: true, attribute: 'scale-min' },
       scaleMax: { type: Number, reflect: true, attribute: 'scale-max' },
       scaleStep: { type: Number, reflect: true, attribute: 'scale-step' },
+      showTable: { type: Boolean, reflect: true, attribute: 'show-table' },
     };
   }
 
@@ -38,6 +39,7 @@ export class RadarChart extends LitElement {
     this.scaleMin = 0;
     this.scaleMax = 10;
     this.scaleStep = 1;
+    this.showTable = false; 
 
     this.chartOptionsArr = {};
     this.marksData = {};
@@ -79,8 +81,10 @@ export class RadarChart extends LitElement {
         },
       },
     };
-    this._setLabels();
-    this._setDataset();
+    const domMarks = [...this.querySelectorAll('tbody tr')];
+    const domLabels = domMarks.shift();
+    this._setLabels(domLabels);
+    this._setDataset(domMarks);
     document.addEventListener('radar-chart-update-data', this.updateData);
   }
 
@@ -119,30 +123,35 @@ export class RadarChart extends LitElement {
     this._drawChart(index);
   }
 
-  _setLabels() {
-    const domLabels = [...this.querySelectorAll('tbody tr th')];
+  _setLabels(trLabels) {
+    const domLabels = [...trLabels.querySelectorAll('th')].map((td) => td.innerText);
+    domLabels.shift();
     this.labels = [];
     domLabels.forEach(label => {
-      const labelText = label.innerText;
-      this.labels.push(labelText);
+      this.labels.push(label);
     });
     this.marksData.labels = this.labels;
   }
 
-  _setDataset() {
+  _setDataset(domMarks) {
     this.marksData.datasets = [];
-    const domMarks = [...this.querySelectorAll('tbody tr td')];
     domMarks.forEach(mark => {
       const randomRed = Math.floor(Math.random() * 255);
       const randomGreen = Math.floor(Math.random() * 255);
       const randomBlue = Math.floor(Math.random() * 255);
       const markData = {};
-      markData.data = mark.innerText.split(',').map(Number);
-      markData.label = mark.getAttribute('name');
-      this.labelsName.push(mark.getAttribute('name'));
+      const tds = [...mark.querySelectorAll('td')];
+      const tdContent = tds.map((td) => td.innerText);
+      const name = tdContent.shift();
+      markData.data = tdContent.map(Number);
+      markData.label = name;
+      this.labelsName.push(name);
       markData.backgroundColor =
         mark.dataset.bgcolor ||
         `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, 0.2)`;
+        if (this.showTable) {
+          [].slice.call(tds.find((th)=>th.innerText===name).parentElement.style=`background-color:${markData.backgroundColor}`);
+        }
       if (this.chartOptionsName === 'dots') {
         markData.fill = false;
         markData.radius = 10;
@@ -171,10 +180,16 @@ export class RadarChart extends LitElement {
     }
   }
 
+  _renderTable() {
+    const lightDom = [...this.querySelectorAll('table')];
+    return lightDom.map(table => html`${table}`);
+  }
+
   render() {
     return html`
       <div style="width:${this.sideSize}px; height:${this.sideSize}px;">
         <canvas id="marksChart"></canvas>
+        ${(this.showTable) ? this._renderTable() : ''}
       </div>
     `;
   }
