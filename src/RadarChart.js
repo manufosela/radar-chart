@@ -120,7 +120,7 @@ export class RadarChart extends LitElement {
   }
 
   _setLabels() {
-    const domLabels = [...this.querySelectorAll('.radar-chart__labels li')];
+    const domLabels = [...this.querySelectorAll('tbody tr th')];
     this.labels = [];
     domLabels.forEach(label => {
       const labelText = label.innerText;
@@ -131,7 +131,7 @@ export class RadarChart extends LitElement {
 
   _setDataset() {
     this.marksData.datasets = [];
-    const domMarks = [...this.querySelectorAll('.radar-chart__marks li')];
+    const domMarks = [...this.querySelectorAll('tbody tr td')];
     domMarks.forEach(mark => {
       const randomRed = Math.floor(Math.random() * 255);
       const randomGreen = Math.floor(Math.random() * 255);
